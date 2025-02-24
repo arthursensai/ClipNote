@@ -1,11 +1,11 @@
 const express = require('express');
 const dotenv = require('dotenv');
+const rateLimit = require("express-rate-limit");
+const path = require("path");
 const { summarize } = require('./summarize');
 const healthRoutes = require('./health');
 
-
-//limiter
-const rateLimit = require("express-rate-limit");
+dotenv.config();
 
 const limiter = rateLimit({
     windowMs: 60 * 1000,
@@ -16,23 +16,22 @@ const limiter = rateLimit({
 }); 
 
 const app = express();
+
 app.use(express.json());
-
-dotenv.config();
-
-const PORT = process.env.PORT || 5000;
-
-//health check
-app.use('/', healthRoutes);
-
+app.set('view engine', 'ejs');
+app.use(express.static(path.join(__dirname, "public")));
 app.use(limiter);
-
-//debug requests
+app.use('/', healthRoutes);
 app.use((req, res, next) => {
     console.log(`[${new Date().toISOString()}] ${req.method} ${req.url}`);
     next();
 });
 
+const PORT = process.env.PORT || 5000;
+
+app.get('/', (req, res) => {
+    res.status(200).render('index')
+});
 
 app.get('/summarize', (req, res) => {
     res.status(200).send({message: 'API is working fine'}); 
