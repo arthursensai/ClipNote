@@ -30,7 +30,7 @@ app.use((req, res, next) => {
 const PORT = process.env.PORT || 5000;
 
 app.get('/', (req, res) => {
-    res.status(200).render('index')
+    res.status(200).render('index', { data: { status: 200 } });
 });
 
 app.get('/summarize', (req, res) => {

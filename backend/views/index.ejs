@@ -3,12 +3,286 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="./style.css">
+    <link rel="stylesheet" href="style.css">
     <title>ClipNote API</title>
+    <link rel="icon" type="image/x-icon" href="./clipnote-icon.ico">
 </head>
 <body>
     <header>
         <h1>ClipNote API</h1>
+        <p>Text summarization API powered by Hugging Face models</p>
     </header>
+    
+    <nav>
+        <ul>
+            <li><a href="#overview">Overview</a></li>
+            <li><a href="#authentication">Authentication</a></li>
+            <li><a href="#endpoints">Endpoints</a></li>
+            <li><a href="#rate-limits">Rate Limits</a></li>
+            <li><a href="#examples">Examples</a></li>
+        </ul>
+    </nav>
+    
+    <main>
+        <% if (data) { %>
+            <div class="api-status <%= data.status === 200 ? 'api-online' : 'api-offline' %>">
+                API Status: <%= data.status === 200 ? 'Online' : 'Offline' %> 
+                (Code: <%= data.status %>)
+            </div>
+        <% } %>
+        
+        <section id="overview">
+            <h2>Overview</h2>
+            <p>ClipNote API provides text summarization capabilities using state-of-the-art NLP models. It can generate concise summaries of various lengths based on your requirements.</p>
+            <p>The API is built on the facebook/bart-large-cnn model from Hugging Face and offers different summarization types.</p>
+        </section>
+        
+        <section id="authentication">
+            <h2>Authentication</h2>
+            <p>No authentication is required to access the API endpoints. However, the service uses rate limiting to prevent abuse.</p>
+        </section>
+        
+        <section id="rate-limits">
+            <h2>Rate Limits</h2>
+            <p>To ensure fair usage of the service, the following rate limits apply:</p>
+            <ul>
+                <li>Maximum <strong>10 requests</strong> per minute per IP address</li>
+                <li>Exceeding this limit will result in a <span class="status-badge status-429">429 Too Many Requests</span> response</li>
+            </ul>
+        </section>
+        
+        <section id="endpoints">
+            <h2>Endpoints</h2>
+            
+            <div class="endpoint">
+                <h3>Health Check</h3>
+                <div>
+                    <span class="method get">GET</span>
+                    <span class="path">/</span>
+                </div>
+                <p>Check if the API is running properly.</p>
+                
+                <div class="response-container">
+                    <p>Status: <span class="status-badge status-200">200 OK</span></p>
+                    <pre>{
+  "status": 200
+}</pre>
+                </div>
+            </div>
+            
+            <div class="endpoint">
+                <h3>Summarization Check</h3>
+                <div>
+                    <span class="method get">GET</span>
+                    <span class="path">/summarize</span>
+                </div>
+                <p>Check if the summarization endpoint is available.</p>
+                
+                <div class="response-container">
+                    <p>Status: <span class="status-badge status-200">200 OK</span></p>
+                    <pre>{
+  "message": "API is working fine"
+}</pre>
+                </div>
+            </div>
+            
+            <div class="endpoint">
+                <h3>Summarize Text</h3>
+                <div>
+                    <span class="method post">POST</span>
+                    <span class="path">/summarize</span>
+                </div>
+                <p>Generate a summary of the provided text.</p>
+                
+                <div class="params">
+                    <h4>Request Body Parameters:</h4>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Parameter</th>
+                                <th>Type</th>
+                                <th>Required</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><span class="param-name">text</span></td>
+                                <td>string</td>
+                                <td>Yes</td>
+                                <td>The text to summarize</td>
+                            </tr>
+                            <tr>
+                                <td><span class="param-name">type</span></td>
+                                <td>string</td>
+                                <td>No</td>
+                                <td>Summarization type: "short" (20-50 words), "medium" (50-150 words), or "detailed" (100-300 words). Default is "short".</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="example-container">
+                    <h4>Example Request:</h4>
+                    <div class="tab-container">
+                        <div class="tab active" onclick="switchTab(event, 'curl')">cURL</div>
+                        <div class="tab" onclick="switchTab(event, 'js')">JavaScript</div>
+                        <div class="tab" onclick="switchTab(event, 'python')">Python</div>
+                    </div>
+                    
+                    <div id="curl" class="tab-content active">
+                        <div class="response-container">
+                            <pre>curl -X POST https://your-api-url.com/summarize \
+  -H "Content-Type: application/json" \
+  -d '{
+    "text": "Your long text to be summarized goes here...",
+    "type": "medium"
+  }'</pre>
+                        </div>
+                    </div>
+                    
+                    <div id="js" class="tab-content">
+                        <div class="response-container">
+                            <pre>fetch('https://your-api-url.com/summarize', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify({
+    text: 'Your long text to be summarized goes here...',
+    type: 'medium'
+  })
+})
+.then(response => response.json())
+.then(data => console.log(data))
+.catch(error => console.error('Error:', error));</pre>
+                        </div>
+                    </div>
+                    
+                    <div id="python" class="tab-content">
+                        <div class="response-container">
+                            <pre>import requests
+import json
+
+url = "https://your-api-url.com/summarize"
+payload = {
+    "text": "Your long text to be summarized goes here...",
+    "type": "medium"
+}
+headers = {"Content-Type": "application/json"}
+
+response = requests.post(url, data=json.dumps(payload), headers=headers)
+print(response.json())</pre>
+                        </div>
+                    </div>
+                </div>
+                
+                <h4>Successful Response:</h4>
+                <div class="response-container">
+                    <p>Status: <span class="status-badge status-200">200 OK</span></p>
+                    <pre>{
+  "message": "The summarized text will appear here, condensed based on your specified type."
+}</pre>
+                </div>
+                
+                <h4>Error Responses:</h4>
+                <div class="response-container">
+                    <p>Status: <span class="status-badge status-400">400 Bad Request</span></p>
+                    <pre>{
+  "message": "Invalid text input"
+}</pre>
+                </div>
+                
+                <div class="response-container">
+                    <p>Status: <span class="status-badge status-400">400 Bad Request</span></p>
+                    <pre>{
+  "message": "Invalid Hugging Face token"
+}</pre>
+                </div>
+                
+                <div class="response-container">
+                    <p>Status: <span class="status-badge status-500">500 Internal Server Error</span></p>
+                    <pre>{
+  "message": "Error message from the server"
+}</pre>
+                </div>
+                
+                <div class="response-container">
+                    <p>Status: <span class="status-badge status-429">429 Too Many Requests</span></p>
+                    <pre>{
+  "status": 429,
+  "message": "Too many requests, please try again later."
+}</pre>
+                </div>
+            </div>
+        </section>
+        
+        <section id="examples">
+            <h2>Usage Examples</h2>
+            
+            <div class="example">
+                <h3>Simple Summarization Example</h3>
+                <p>Here's an example of summarizing a news article:</p>
+                
+                <div class="response-container">
+                    <pre>// Request
+POST /summarize
+{
+  "text": "Climate change is the long-term alteration in Earth's climate and weather patterns. It is caused predominantly by human activities, particularly the burning of fossil fuels, which adds heat-trapping gases to Earth's atmosphere. The primary cause of climate change is the burning of fossil fuels, such as coal, oil, and gas, which emits greenhouse gases into the air. The burning of these fuels creates gases that build up in the atmosphere and cause problems like pollution, smog, and global warming. The main gases responsible for the greenhouse effect include carbon dioxide, methane, nitrous oxide, and fluorinated gases. When we burn fossil fuels, we release CO2 into the air...",
+  "type": "short"
+}
+
+// Response
+{
+  "message": "Climate change is the long-term alteration in Earth's climate caused mainly by human activities that emit greenhouse gases like carbon dioxide into the atmosphere through burning fossil fuels."
+}</pre>
+                </div>
+            </div>
+        </section>
+    </main>
+    
+    <footer>
+        <p>&copy; <%= new Date().getFullYear() %> ClipNote API. All rights reserved.</p>
+    </footer>
+    
+    <script>
+        // Add intersection observer for scroll animations
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = 1;
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('section').forEach(section => {
+            section.style.opacity = 0;
+            section.style.transform = 'translateY(20px)';
+            section.style.transition = 'all 0.6s ease-out';
+            observer.observe(section);
+        });
+
+        // Enhanced tab switching with animation
+        function switchTab(event, tabId) {
+            const tabs = document.querySelectorAll('.tab');
+            const contents = document.querySelectorAll('.tab-content');
+            
+            tabs.forEach(tab => tab.classList.remove('active'));
+            contents.forEach(content => {
+                content.style.opacity = 0;
+                content.style.transform = 'translateY(10px)';
+                setTimeout(() => content.classList.remove('active'), 200);
+            });
+            
+            event.currentTarget.classList.add('active');
+            const activeContent = document.getElementById(tabId);
+            activeContent.classList.add('active');
+            setTimeout(() => {
+                activeContent.style.opacity = 1;
+                activeContent.style.transform = 'translateY(0)';
+            }, 50);
+        }
+    </script>
 </body>
 </html>
