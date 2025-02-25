@@ -1,1 +1,1 @@
-the frontend for clipnote
+the frontend for clipnote       
