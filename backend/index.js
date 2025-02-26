@@ -17,6 +17,15 @@ const limiter = rateLimit({
 
 const app = express();
 
+//IMPORTANT to allow the frontend to work with the backend
+app.use(
+    cors({
+      origin: "https://clipnote-frontend.onrender.com/", // Allow only this frontend
+      methods: "GET,POST,PUT,DELETE",
+      allowedHeaders: "Content-Type",
+    })
+  );
+
 app.use(express.json());
 app.set('view engine', 'ejs');
 app.use(express.static(path.join(__dirname, "public")));
