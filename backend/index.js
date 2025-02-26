@@ -2,6 +2,7 @@ const express = require('express');
 const dotenv = require('dotenv');
 const rateLimit = require("express-rate-limit");
 const path = require("path");
+const cors = require('cors');
 const { summarize } = require('./summarize');
 const healthRoutes = require('./health');
 
