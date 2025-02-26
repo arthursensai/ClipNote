@@ -21,11 +21,16 @@ const app = express();
 //IMPORTANT to allow the frontend to work with the backend
 app.use(
     cors({
-      origin: "https://clipnote-frontend.onrender.com/", // Allow only this frontend
+      origin: function (origin, callback) {
+        if (!origin || origin === "http://localhost:5173" || origin === "https://clipnote-frontend.onrender.com") {
+          return callback(null, true); // Allow the request
+        }
+        return callback(new Error('Not allowed by CORS'), false); // Reject request
+      },
       methods: "GET,POST,PUT,DELETE",
       allowedHeaders: "Content-Type",
     })
-  );
+  );  
 
 app.use(express.json());
 app.set('view engine', 'ejs');
