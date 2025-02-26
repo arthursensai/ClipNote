@@ -1,19 +1,17 @@
 import React, { useState } from 'react';
 
-const Form = () => {
+const Form = ({ onSubmit }) => {
     const [text, setText] = useState('');
     const [summaryType, setSummaryType] = useState('standard');
-    
+
     const handleSubmit = (e) => {
         e.preventDefault();
-        // Add your summarization logic here
-        console.log('Text to summarize:', text);
-        console.log('Summary type:', summaryType);
+        onSubmit(text, summaryType);
     };
     
     return (
         <div className="max-w-2xl mx-auto p-6 bg-white rounded-lg shadow-md">
-            <form onSubmit={handleSubmit} className="space-y-6">
+            <form className="space-y-6" onSubmit={handleSubmit}>
                 <h2 className="text-2xl font-bold text-gray-800 mb-4">
                     Write below the text you want to summarize
                 </h2>

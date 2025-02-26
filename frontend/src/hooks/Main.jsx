@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Form from './Form';
+import Form from './Form.jsx';
 
 const Main = () => {
     const [summary, setSummary] = useState('');
@@ -22,7 +22,7 @@ const Main = () => {
         }[summaryType] || 'short';
 
         try {
-            const response = await fetch('/summarize', {
+            const response = await fetch('https://clipnote.onrender.com/summarize', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

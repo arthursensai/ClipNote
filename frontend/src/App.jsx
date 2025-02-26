@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import Header from './hooks/Header';
-import Main from './hooks/Main';
+import Header from './hooks/Header.jsx';
+import Main from './hooks/Main.jsx';
 import { useLocation } from 'react-router-dom';
 
 const App = () => {
