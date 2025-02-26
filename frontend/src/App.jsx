@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useLocation } from "react-router-dom";
-import Header from "./hooks/Header.jsx";
+import Header from "./hooks/header.jsx";
 import Main from "./hooks/main.jsx";
 import Footer from "./hooks/footer.jsx";
 
