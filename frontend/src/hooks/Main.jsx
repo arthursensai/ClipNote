@@ -9,7 +9,7 @@ const Main = () => {
 
     const handleSummarize = async (text, summaryType) => {
         // Reset states
-        setIsLoading(true);
+        setIsLoading(true); 
         setError(null);
         setTextSubmitted(true);
         setSummary('');
